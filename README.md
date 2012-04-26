@@ -62,7 +62,7 @@ gem 'bcrypt-ruby'
 </code></pre>
 
 1. Recreate database:
-> bundle exec rake db:migrate
+> bundle exec rake db:migrate   
 > bundle exec rake db:reset  #if we want to clear it out
 
 1. Add an authentication method in app/controllers/application_controller.rb:
