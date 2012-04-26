@@ -38,7 +38,7 @@ before_filter :authenticate
 
   # GET /tasks/1/edit
   def edit
-    @task = Task.find(:all, :conditions => {:user_id => @user.id, :id => params[:id]})
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
 #    @task = Task.find(params[:id])
   end
 
@@ -80,7 +80,7 @@ before_filter :authenticate
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
-    @task = Task.find(params[:id])
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
     @task.destroy
 
     respond_to do |format|
