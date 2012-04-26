@@ -47,3 +47,17 @@ There are also admin privileges baked in - an admin can create, read, update, an
 5. Create the Task scaffolding, which generates the model, controller, and views for a task
     rails generate scaffold Task project_name:string task_name:string performed_on:date hours:float notes:text user:references  --no-test-framework
 
+6. Modify the User model to make 1-to-many mapping to tasks, as well as adding secure password support:
+app/models/user.rb:
+  class User < ActiveRecord::Base
+    has_secure_password
+    has_many :tasks
+  end
+
+7. Recreate database:
+  bundle exec rake db:reset
+  bundle exec rake db:create
+  bundle exec rake db:migrate
+
+8. Modify the users_controller.rb and tasks_controller.rb to perform authentication prior to routing a request:
+  before_filter :authenticate
