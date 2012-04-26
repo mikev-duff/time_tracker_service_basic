@@ -142,3 +142,16 @@ gem 'bcrypt-ruby'
      me.password = "foobar"
      me.save
 </code></pre>
+
+# Optional Improvements
+While we now have a fully functioning service for mobile clients, there's a lot more we can do.
+
+1. Add some style
+Add <b>bootstrap</b> (http://http://twitter.github.com/bootstrap/) for nice CSS styles:
+Gemfile
+<pre><code>
+gem 'bootstrap-sass'
+</code></pre>
+Then:
+>bundle install
+

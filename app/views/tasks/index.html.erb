@@ -1,6 +1,6 @@
-<h1>Listing tasks</h1>
+<h1>Tasks</h1>
 
-<table>
+<table class="table table-striped table-bordered table-condensed">
   <tr>
     <th>Project name</th>
     <th>Task name</th>
@@ -8,6 +8,7 @@
     <th>Hours</th>
     <th>Notes</th>
     <th>User</th>
+    <th>Email</th>
     <th></th>
     <th></th>
     <th></th>
@@ -20,7 +21,8 @@
     <td><%= task.performed_on %></td>
     <td><%= task.hours %></td>
     <td><%= task.notes %></td>
-    <td><%= task.user %></td>
+    <td><%= task.user.name %></td>
+    <td><%= task.user.email %></td>
     <td><%= link_to 'Show', task %></td>
     <td><%= link_to 'Edit', edit_task_path(task) %></td>
     <td><%= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete %></td>
