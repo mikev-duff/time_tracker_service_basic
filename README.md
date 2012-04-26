@@ -35,7 +35,7 @@ There are also admin privileges baked in - an admin can create, read, update, an
 1. Create a new Rails project using Postgres for the database.  Postgres is chosen because we'll deploy on Heroku (http://www.heroku.com/) which offers a free 5MB shared Postgres database.
 >rails new time_tracker_service -d postgresql
 
-1. Add the bcrypt gem, which will allow us to store encrypted passwords in the database Gemfile
+1. Add the bcrypt gem, which will allow us to store encrypted passwords in the database Gemfile:
 <pre><code>
 gem 'bcrypt-ruby'
 </code></pre>
@@ -43,10 +43,10 @@ gem 'bcrypt-ruby'
 1. Install the bundle with new Gem:
 >bundle install
 
-1. Create the User scaffolding, which generates the model, controller, and views for a user
+1. Create the User scaffolding, which generates the model, controller, and views for a user:
 >rails generate scaffold User name:string email:string password:string password_digest:string admin:boolean --no-test-framework
 
-1. Create the Task scaffolding, which generates the model, controller, and views for a task
+1. Create the Task scaffolding, which generates the model, controller, and views for a task:
 >rails generate scaffold Task project_name:string task_name:string performed_on:date hours:float notes:text user:references  --no-test-framework
 
 1. take a look at the routes - as you can see all of the CRUD endpoints have been created for us:
