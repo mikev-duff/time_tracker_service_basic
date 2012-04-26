@@ -16,8 +16,8 @@ before_filter :authenticate
   # GET /tasks/1
   # GET /tasks/1.json
   def show
-    #@task = Task.find(params[:id])
     @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+    #@task = Task.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
