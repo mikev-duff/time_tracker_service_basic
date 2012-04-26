@@ -68,6 +68,7 @@ There are also admin privileges baked in - an admin can create, read, update, an
 
 
 10. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
+
     def index
         @tasks = Task.find_all_by_user_id(@user.id)
     ...
@@ -90,10 +91,10 @@ There are also admin privileges baked in - an admin can create, read, update, an
         @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
 
 11. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.
-    -  <div class="field">
-    -    <%= f.label :user %><br />
-    -    <%= f.text_field :user %>
-    -  </div>
+    <div class="field">
+        <%= f.label :user %><br />
+        <%= f.text_field :user %>
+    </div>
 
 12. Test it locally:
     rails s
@@ -105,5 +106,5 @@ There are also admin privileges baked in - an admin can create, read, update, an
 
 14. Add admin user on remote machine via <tt>heroku console</tt>:
      me = User.new(name: "Mike V", email: "mikev@duffresearch.com", admin: true)
-    me.password = "foobar"
-    me.save
+     me.password = "foobar"
+     me.save
