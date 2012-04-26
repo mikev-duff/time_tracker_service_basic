@@ -65,7 +65,7 @@ gem 'bcrypt-ruby'
 > bundle exec rake db:migrate   
 > bundle exec rake db:reset  #if we want to clear it out
 
-1. Add an authentication method in app/controllers/application_controller.rb:
+1. Add an authentication method in app/controllers/application_controller.rb.  This will check to see if the user is already authenticated, and if not will return an unauthorized response.  It optionally checks to see if a user has admin privileges:
 <pre><code>
     def authenticate(adminCheck=false)
       authenticate_or_request_with_http_basic('Login') do |username, password|
@@ -79,7 +79,7 @@ gem 'bcrypt-ruby'
     end
 </code></pre>
 
-1. Modify the users_controller.rb and tasks_controller.rb to perform authentication prior to routing a request:
+1. Modify the users_controller.rb and tasks_controller.rb to perform authentication prior to performing a request:
 <pre><code>
     before_filter do |controller|
         authenticate(true) #true for users_controller.rb, false for tasks_controller.rb
@@ -111,7 +111,7 @@ gem 'bcrypt-ruby'
         ...
 </code></pre>
 
-1. Update app/views/users/_form_html.erb to remove the password hash field, since we want the has_secure_password to save the hash for us:
+1. Update app/views/users/_form_html.erb to remove the password hash field, since we want the has_secure_password to save the hash for us.  Remove this:
 <pre><code>
   &lt;div class="field"&gt;
     &lt;%= f.label :password_digest %>&lt;br /&gt;
@@ -119,7 +119,7 @@ gem 'bcrypt-ruby'
   &lt;/div&gt;
 </code></pre>
 
-1. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.  Remove this:
+1. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because the controller is getting the user from who is currently logged in, and attempting to set it via form data will result in an error.  Remove this:
 <pre><code>
   &lt;div class="field"&gt;
     &lt;%= f.label :user %>&lt;br /&gt;
