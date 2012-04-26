@@ -1,4 +1,4 @@
-== time_tracker_service
+# time_tracker_service
 
 This is basic a web service built on Rails, intended to illustrate step-by-step how to create
 and deploy a marginally useful simple web service from scratch.  It provides a
@@ -13,7 +13,7 @@ delete records that contain the following data:
 There are also admin privileges baked in - an admin can create, read, update, and delete users.
 
 
-== Features
+# Features
 * REST API's (Create, Read, Update, Delete via HTTPS)
 * JSON format
 * Solid MVC architecture
@@ -21,87 +21,113 @@ There are also admin privileges baked in - an admin can create, read, update, an
 * Multi-user, admin privileges
 * web interface to create, read, update, and delete users and tasks
 
-== Limitations
+# Limitations
 * No sign-up (new users must be added by admin)
 * Very basic web pages (no CSS styling, no pages for summaries, charts, etc)
 * No tests
 
-== Requirements
+# Requirements
 * Ruby 1.9.2 (RVM works well: https://rvm.io/)
 * Rails 3.2.3 (gem install rails)
 * Optionally a local database (Postgres OS X install can be found at http://www.postgresql.org/download/macosx/).
 
-== Steps
+# Steps
 1. Create a new Rails project using Postgres for the database.  Postgres is chosen because we'll deploy on Heroku (http://www.heroku.com/) which offers a free 5MB shared Postgres database.
-    rails new time_tracker_service -d postgresql
+>rails new time_tracker_service -d postgresql
 
 2. Add the bcrypt gem, which will allow us to store encrypted passwords in the database Gemfile
-    gem 'bcrypt-ruby'
+>gem 'bcrypt-ruby'
 
 3. Install the bundle with new Gem:
-    bundle install
+>bundle install
 
 4. Create the User scaffolding, which generates the model, controller, and views for a user
-    rails generate scaffold User name:string email:string password_digest:string admin:boolean --no-test-framework
+>rails generate scaffold User name:string email:string password:string password_digest:string admin:boolean --no-test-framework
 
 5. Create the Task scaffolding, which generates the model, controller, and views for a task
-    rails generate scaffold Task project_name:string task_name:string performed_on:date hours:float notes:text user:references  --no-test-framework
+>rails generate scaffold Task project_name:string task_name:string performed_on:date hours:float notes:text user:references  --no-test-framework
+
+6. take a look at the routes - as you can see all of the CRUD endpoints have been created for us:
+>rake routes
 
 6. Modify app/models/user.rb to make 1-to-many mapping from a user to tasks, as well as adding secure password support:
-    class User < ActiveRecord::Base
+<pre><code>
+    class User &lt; ActiveRecord::Base
         has_secure_password
         has_many :tasks
+        ...
     end
+</code></pre>
 
 7. Recreate database:
-    bundle exec rake db:reset
-    bundle exec rake db:create
-    bundle exec rake db:migrate
+> bundle exec rake db:reset   
+> bundle exec rake db:create   
+> bundle exec rake db:migrate   
 
+8. Add an authentication method in app/controllers/application_controller.rb:
+<pre><code>
+    def authenticate(adminCheck=false)
+      authenticate_or_request_with_http_basic('Login') do |username, password|
+          @user = User.find_by_email(username)
+          if adminCheck == true
+               @user && @user.authenticate(password) && @user.admin
+          else
+               @user && @user.authenticate(password)
+          end
+      end
+    end
+</code></pre>
 8. Modify the users_controller.rb and tasks_controller.rb to perform authentication prior to routing a request:
-    before_filter :authenticate
+<pre><code>
+    before_filter do |controller|
+        authenticate(true) #true for users_controller.rb, false for tasks_controller.rb
+    end
+</code></pre>
 
-9. Update app/controllers/users_controller.rb to get the password from the form and save it securely:
+1. Update app/controllers/users_controller.rb to get the password from the form and save it securely:
+<pre><code>
     def create
         @user = User.new(params[:user])
         @user.password = @user.password_digest #we should really fix the form to call it 'password' instead of 'password_digest'
+</code></pre>
 
-
-10. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
-
+12. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
+<pre><code>
     def index
-        @tasks = Task.find_all_by_user_id(@user.id)
-        ...
+    @tasks = Task.find_all_by_user_id(@user.id)
+    ...
     def show
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-        ...
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+    ...
     def new
-        @task = @user.tasks.build(params[:task])
-        ...
+    @task = @user.tasks.build(params[:task])
+    ...
     def edit
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-        ...
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+    ...
     def create
-        @task = @user.tasks.build(params[:task])
-        ...
+    @task = @user.tasks.build(params[:task])
+    ...
     def update
-        @task = Task.find(params[:id])
-        ...
+    @task = Task.find(params[:id])
+    ...
     def destroy
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+</code></pre>
 
-11. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.
-    remove div class="field" block
+11. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.  Remove the 
 
 12. Test it locally:
-    rails s
+>rails s
 
 13. Deploy!
-    heroku create --stack cedar timetrackerservice
-    git push heroku master
-    heroku run rake db:migrate
+>heroku create --stack cedar timetrackerservice   
+>git push heroku master  
+>heroku run rake db:migrate  
 
 14. Add admin user on remote machine via <tt>heroku console</tt>:
+<pre><code>
      me = User.new(name: "Mike V", email: "mikev@duffresearch.com", admin: true)
      me.password = "foobar"
      me.save
+</code></pre>
