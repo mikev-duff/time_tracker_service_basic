@@ -122,8 +122,8 @@ gem 'bcrypt-ruby'
 1. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.  Remove this:
 <pre><code>
   &lt;div class="field"&gt;
-    &lt;%= f.label :password_digest %>&lt;br /&gt;
-    &lt;%= f.text_field :password_digest %&gt;
+    &lt;%= f.label :user %>&lt;br /&gt;
+    &lt;%= f.text_field :user %&gt;
   &lt;/div&gt;
 </code></pre>
 
