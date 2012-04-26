@@ -17,7 +17,7 @@ before_filter :authenticate
   # GET /tasks/1.json
   def show
     #@task = Task.find(params[:id])
-    @task = Task.find(:all, :conditions => {:user_id => @user.id, :id => params[:id]})
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,7 +28,7 @@ before_filter :authenticate
   # GET /tasks/new
   # GET /tasks/new.json
   def new
-    @task = Task.new
+    @task = @user.tasks.build(params[:task])
 
     respond_to do |format|
       format.html # new.html.erb
