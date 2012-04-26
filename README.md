@@ -84,38 +84,46 @@ There are also admin privileges baked in - an admin can create, read, update, an
     end
 </code></pre>
 
-1. Update app/controllers/users_controller.rb to get the password from the form and save it securely:
+1. Update app/views/users/_form_html.erb to remove the password hash field, since we want the has_secure_password to save the hash for us:
 <pre><code>
-    def create
-        @user = User.new(params[:user])
-        @user.password = @user.password_digest #we should really fix the form to call it 'password' instead of 'password_digest'
+  <div class="field">
+    <%= f.label :password_digest %><br />
+    <%= f.text_field :password_digest %>
+  </div>
 </code></pre>
 
 12. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
 <pre><code>
     def index
-    @tasks = Task.find_all_by_user_id(@user.id)
-    ...
+      @tasks = Task.find_all_by_user_id(@user.id)
+      ...
     def show
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-    ...
+      @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+      ...
     def new
-    @task = @user.tasks.build(params[:task])
-    ...
+      @task = @user.tasks.build(params[:task])
+      ...
     def edit
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-    ...
+      @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+      ...
     def create
-    @task = @user.tasks.build(params[:task])
-    ...
+      @task = @user.tasks.build(params[:task])
+      ...
     def update
-    @task = Task.find(params[:id])
-    ...
+      @task = Task.find(params[:id])
+      ...
     def destroy
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+      @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+      ...
 </code></pre>
 
-11. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.  Remove the 
+11. Update app/views/tasks/_form.html.erb so we can add new tasks from the web interface.  This is necessary because we're getting the user from who is currently logged in.  Remove this:
+<pre><code>
+  <div class="field">
+    <%= f.label :password_digest %><br />
+    <%= f.text_field :password_digest %>
+  </div>
+</code></pre>
 
 12. Test it locally:
 >rails s
