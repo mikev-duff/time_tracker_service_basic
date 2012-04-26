@@ -32,20 +32,20 @@ There are also admin privileges baked in - an admin can create, read, update, an
 * Optionally a local database (Postgres OS X install can be found at http://www.postgresql.org/download/macosx/).
 
 == Steps
-1. Create a new Rails project using Postgres for the database.  Postgres is chosen because we'll deploy
+ 1. Create a new Rails project using Postgres for the database.  Postgres is chosen because we'll deploy
 on Heroku (http://www.heroku.com/) which offers a free 5MB shared Postgres database.
     rails new time_tracker_service -d postgresql
 
-2. Add the bcrypt gem, which will allow us to store encrypted passwords in the database
+ 2. Add the bcrypt gem, which will allow us to store encrypted passwords in the database
 Gemfile
   gem 'bcrypt-ruby'
 
-3. Install the bundle with new Gem:
+ 3. Install the bundle with new Gem:
   bundle install
 
-4. Create the User scaffolding, which generates the model, controller, and views for a user
+ 4. Create the User scaffolding, which generates the model, controller, and views for a user
  rails generate scaffold User name:string email:string password_digest:string admin:boolean --no-test-framework
 
-5. Create the Task scaffolding, which generates the model, controller, and views for a task
+ 5. Create the Task scaffolding, which generates the model, controller, and views for a task
  rails generate scaffold Task project_name:string task_name:string performed_on:date hours:float notes:text user:references  --no-test-framework
 
