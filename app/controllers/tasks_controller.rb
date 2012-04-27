@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
 
 before_filter :authenticate
+before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
 
   # GET /tasks
   # GET /tasks.json
@@ -16,8 +17,6 @@ before_filter :authenticate
   # GET /tasks/1
   # GET /tasks/1.json
   def show
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-    #@task = Task.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -38,8 +37,6 @@ before_filter :authenticate
 
   # GET /tasks/1/edit
   def edit
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
-#    @task = Task.find(params[:id])
   end
 
   # POST /tasks
@@ -64,7 +61,6 @@ before_filter :authenticate
   # PUT /tasks/1
   # PUT /tasks/1.json
   def update
-    @task = Task.find(params[:id])
 
     respond_to do |format|
       if @task.update_attributes(params[:task])
@@ -80,7 +76,6 @@ before_filter :authenticate
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
-    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
     @task.destroy
 
     respond_to do |format|
@@ -99,4 +94,10 @@ before_filter :authenticate
         #username == "foo" && password == "bar"
     end
   end
+
+  def fetch_task_for_user
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+  end
+
+
 end

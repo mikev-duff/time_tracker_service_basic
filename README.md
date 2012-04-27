@@ -89,27 +89,36 @@ gem 'bcrypt-ruby'
 
 1. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
 <pre><code>
+before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
+...
+
+
     def index
         @tasks = Task.find_all_by_user_id(@user.id)
         ...
     def show
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+        #remove @task assignment
         ...
     def new
         @task = @user.tasks.build(params[:task])
         ...
     def edit
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+        #remove @task assignment
         ...
     def create
         @task = @user.tasks.build(params[:task])
         ...
     def update
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+        #remove @task assignment
         ...
     def destroy
-        @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+        #remove @task assignment
         ...
+
+  def fetch_task_for_user
+    @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
+  end
+
 </code></pre>
 
 1. Update app/views/users/_form_html.erb to remove the password hash field, since we want the has_secure_password to save the hash for us.  Remove this:
