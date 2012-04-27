@@ -15,14 +15,15 @@ There are also admin privileges baked in - an admin can create, read, update, an
 
 # Features
 * REST API's (Create, Read, Update, Delete via HTTPS)
-* JSON and XML supported
+* JSON and XML supported out of the box
 * Solid MVC architecture
 * Secure (Basic-Auth over HTTPS, encrypted passwords stored in database)
 * Multi-user, admin privileges
 * web interface to create, read, update, and delete users and tasks
+* ready to deploy in the cloud (e.g., via Heroku)
 
 # Limitations
-* No sign-up (new users must be added by admin)
+* No sign-up (new users must be added by admin via web interface or console)
 * Very basic web pages (no CSS styling, no pages for summaries, charts, etc)
 * No tests
 
@@ -118,9 +119,7 @@ before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
   def fetch_task_for_user
     @task = Task.find(:first, :conditions => {:user_id => @user.id, :id => params[:id]})
   end
-
 </code></pre>
-
 1. Update app/views/users/_form_html.erb to remove the password hash field, since we want the has_secure_password to save the hash for us.  Remove this:
 <pre><code>
   &lt;div class="field"&gt;
