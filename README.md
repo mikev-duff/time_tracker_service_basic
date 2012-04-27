@@ -155,3 +155,20 @@ gem 'bootstrap-sass'
 Then:
 >bundle install
 
+Add app/assets/stylesheets/custom.css.scss containing the following line:
+<pre><code>
+@import "bootstrap";
+</code></pre>
+
+Then, Bootstrap styling can be used throughout the views.  First make the body a fixed layout by adding a container class around the yield:
+app/views/layouts/application.html.erb
+<pre><code>
+<div class="container">
+ <%= yield %>
+</div>
+</code></pre>
+
+Then improve the tables by including class attributes:
+<pre><code>
+<table class="table table-striped table-bordered table-condensed">
+</code></pre>
