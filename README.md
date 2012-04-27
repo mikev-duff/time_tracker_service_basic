@@ -80,14 +80,14 @@ gem 'bcrypt-ruby'
     end
 </code></pre>
 
-1. Modify the users_controller.rb and tasks_controller.rb to perform authentication prior to performing a request:
+1. Modify the app/controllers/users_controller.rb and app/controllers/tasks_controller.rb to perform authentication prior to performing a request:
 <pre><code>
     before_filter do |controller|
         authenticate(true) #true for users_controller.rb, false for tasks_controller.rb
     end
 </code></pre>
 
-1. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user:
+1. Update app/controllers/tasks_controller.rb to perform CRUD only on tasks owned by the logged-in user (we don't update users_controller.rb because that's only for the admin):
 <pre><code>
 before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
 ...
