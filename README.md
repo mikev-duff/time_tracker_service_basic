@@ -15,7 +15,7 @@ There are also admin privileges baked in - an admin can create, read, update, an
 
 # Features
 * REST API's (Create, Read, Update, Delete via HTTPS)
-* JSON format
+* JSON and XML supported
 * Solid MVC architecture
 * Secure (Basic-Auth over HTTPS, encrypted passwords stored in database)
 * Multi-user, admin privileges
@@ -30,6 +30,7 @@ There are also admin privileges baked in - an admin can create, read, update, an
 * Ruby 1.9.2 (RVM works well: https://rvm.io/)
 * Rails 3.2.3 (gem install rails)
 * Optionally a local database (Postgres OS X install can be found at http://www.postgresql.org/download/macosx/).
+* Heroku toolbelt for deployment to web: https://toolbelt.herokuapp.com/
 
 # Steps
 1. Create a new Rails project using Postgres for the database.  Postgres is chosen because we'll deploy on Heroku (http://www.heroku.com/) which offers a free 5MB shared Postgres database.
@@ -142,3 +143,9 @@ gem 'bcrypt-ruby'
      me.password = "foobar"
      me.save
 </code></pre>
+
+# Resources
+http://guides.rubyonrails.org/  - getting started is pretty comprehensive   
+http://ruby.railstutorial.org/ - very detailed and up to date tutorial for building a twitter client   
+https://www.coursera.org/course/saas (next session starts in May) - Looks like a great course from Berkeley U   
+
