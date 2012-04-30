@@ -1,34 +1,79 @@
 :javascript
  $(document).ready( function() {
- $('#example').dataTable();
- } );
+ var oTable = $('#taskTable').dataTable();
+ $('#addNewButton').click(function() {
+  fnClickAddRow();
+  })
+
+
+    /* Apply the jEditable handlers to the table */
+    oTable.$('td').editable( 'tasks/16.json', {
+        method : "PUT",
+        "callback": function( sValue, y ) {
+            var aPos = oTable.fnGetPosition( this );
+            oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+        },
+        "submitdata": function ( value, settings ) {
+            return {
+                "row_id": this.parentNode.getAttribute('id'),
+                "column": oTable.fnGetPosition( this )[2]
+            };
+        },
+        "height": "14px",
+        "width": "100%"
+    } );
+
+ });
+
+ function fnClickAddRow() {
+ $('#taskTable').dataTable().fnAddData( [
+ "DataTables", "", "", "", "", "", "", "", "", "" ]);
+
+  $.ajax({
+  type: 'POST',
+  url: 'tasks.json',
+  data : {"project_name" : "adsfasdf"},
+  contentType: "application/json"
+  });
+
+  }
+
+
+
 
 .page-header
  %h1 Task List
 
-%table.table.table-striped.table-bordered.table-condensed#example
- %thead
-  %tr
-   %th Project name
-   %th Task name
-   %th Performed on
-   %th Hours
-   %th Notes
-   %th User
-   %th Email
-   %th
-   %th
-   %th
- %tbody
-  - @tasks.each do |task|
+.row.span12
+
+ %table.table.table-striped.table-bordered.table-condensed#taskTable
+  %thead
    %tr
-    %td= task.project_name
-    %td= task.task_name
-    %td= task.performed_on
-    %td= task.hours
-    %td= task.notes
-    %td= task.user.name
-    %td= task.user.email
-    %td= link_to 'Show', task
-    %td= link_to 'Edit', edit_task_path(task)
-    %td= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete
+    %th Project name
+    %th Task name
+    %th Performed on
+    %th Hours
+    %th Notes
+    %th User
+    %th Email
+    %th
+    %th
+    %th
+  %tbody
+   - @tasks.each do |task|
+    %tr
+     %td= task.project_name
+     %td= task.task_name
+     %td= task.performed_on
+     %td= task.hours
+     %td= task.notes
+     %td= task.user.name
+     %td= task.user.email
+     %td= link_to 'Show', task
+     %td= link_to 'Edit', edit_task_path(task)
+     %td= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete
+
+.row.span12
+ %button.btn.btn-primary#addNewButton Add New Entry
+
+.result
