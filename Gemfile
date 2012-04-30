@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'haml'
 gem 'bcrypt-ruby'
 gem 'bootstrap-sass'
 gem 'rails', '3.2.3'
