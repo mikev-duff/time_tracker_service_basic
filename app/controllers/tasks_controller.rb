@@ -1,11 +1,15 @@
 class TasksController < ApplicationController
-
+require 'gchart'
 before_filter :authenticate
 before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
 
   # GET /tasks
   # GET /tasks.json
   def index
+
+@graph = Gchart.pie_3d(:title => 'Tasks', :size => '400x200',
+                       :data => [10, 45, 45], :labels => ["Duff", "Nest", "Other"] )
+
     @tasks = Task.find_all_by_user_id(@user.id)
     #@tasks = Task.all
     respond_to do |format|
@@ -91,7 +95,6 @@ before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
     authenticate_or_request_with_http_basic('Login') do |username, password|
         @user = User.find_by_email(username)
         @user && @user.authenticate(password)
-        #username == "foo" && password == "bar"
     end
   end
 

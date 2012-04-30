@@ -157,3 +157,32 @@ http://guides.rubyonrails.org/  - getting started is pretty comprehensive
 http://ruby.railstutorial.org/ - very detailed and up to date tutorial for building a twitter client   
 https://www.coursera.org/course/saas (next session starts in May) - Looks like a great course from Berkeley U   
 
+# Optional Improvements
+While we now have a fully functioning service for mobile clients, there's a lot more we can do.
+
+1. Add some style
+Add <b>bootstrap</b> (http://http://twitter.github.com/bootstrap/) for nice CSS styles:
+Gemfile
+<pre><code>
+gem 'bootstrap-sass'
+</code></pre>
+Then:
+>bundle install
+
+Add app/assets/stylesheets/custom.css.scss containing the following line:
+<pre><code>
+@import "bootstrap";
+</code></pre>
+
+Then, Bootstrap styling can be used throughout the views.  First make the body a fixed layout by adding a container class around the yield:
+app/views/layouts/application.html.erb
+<pre><code>
+<div class="container">
+ <%= yield %>
+</div>
+</code></pre>
+
+Then improve the tables by including class attributes:
+<pre><code>
+<table class="table table-striped table-bordered table-condensed">
+</code></pre>
