@@ -7,17 +7,20 @@
 
 
     /* Apply the jEditable handlers to the table */
-    oTable.$('td').editable( 'tasks/16.json', {
+    oTable.$('td').editable( 'tasks/63.json', {
+             indicator : 'Saving...',
+             tooltip   : 'Click to edit...',
         method : "PUT",
         "callback": function( sValue, y ) {
-            var aPos = oTable.fnGetPosition( this );
-            oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+            //var aPos = oTable.fnGetPosition( this );
+            //oTable.fnUpdate( sValue, aPos[0], aPos[1] );
         },
         "submitdata": function ( value, settings ) {
-            return {
-                "row_id": this.parentNode.getAttribute('id'),
-                "column": oTable.fnGetPosition( this )[2]
-            };
+            console.log(this.parentNode.getAttribute('id'));
+            console.log(oTable.fnGetPosition( this )[2]);
+              var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working edit from jeditable"}}
+
+              return testdata;
         },
         "height": "14px",
         "width": "100%"
@@ -26,15 +29,25 @@
  });
 
  function fnClickAddRow() {
+
+    var d = new Date().toISOString();
+
  $('#taskTable').dataTable().fnAddData( [
- "DataTables", "", "", "", "", "", "", "", "", "" ]);
+
+
+ "foobar", "", d, 8, "working from javascript", "admin", "foo@bar.com", "", "", "" ]);
+
+
+
+  var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d}}
 
   $.ajax({
   type: 'POST',
   url: 'tasks.json',
-  data : {"project_name" : "adsfasdf"},
-  contentType: "application/json"
+  data : testdata,
   });
+
+   //$('#taskTable').dataTable().fnReloadAjax();
 
   }
 
@@ -42,7 +55,11 @@
 
 
 .page-header
- %h1 Task List
+ %h1 #{@user.name}'s Completed Tasks
+
+
+.row.span12
+ %button.btn.btn-primary#addNewButton Add New Task
 
 .row.span12
 
@@ -51,29 +68,23 @@
    %tr
     %th Project name
     %th Task name
-    %th Performed on
+    %th Completed on
     %th Hours
     %th Notes
     %th User
     %th Email
     %th
-    %th
-    %th
   %tbody
    - @tasks.each do |task|
-    %tr
-     %td= task.project_name
+    %tr{:id=>task.id}
+     %td.editable= task.project_name
      %td= task.task_name
      %td= task.performed_on
      %td= task.hours
      %td= task.notes
      %td= task.user.name
      %td= task.user.email
-     %td= link_to 'Show', task
-     %td= link_to 'Edit', edit_task_path(task)
-     %td= link_to 'Destroy', task, confirm: 'Are you sure?', method: :delete
+     %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
 
-.row.span12
- %button.btn.btn-primary#addNewButton Add New Entry
 
 .result
