@@ -6,25 +6,37 @@
   })
 
 
-    /* Apply the jEditable handlers to the table */
-    oTable.$('td').editable( 'tasks/63.json', {
+ oTable.$('td').editable(function(value, settings) {
+
+    var aPos = oTable.fnGetPosition( this );
+    var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id');
+    console.log(name);
+
+    var className = this.getAttribute('class');
+    console.log(className);
+
+   var data = {};
+   data[name] = value;
+
+   var testdata = {task : data};
+   id = this.parentNode.getAttribute('id');
+   $.ajax({
+   type: 'PUT',
+   url: 'tasks/' + id + '.json',
+   data : testdata,
+   });
+
+
+            return(value);
+    }, {
              indicator : 'Saving...',
              tooltip   : 'Click to edit...',
-        method : "PUT",
-        "callback": function( sValue, y ) {
-            //var aPos = oTable.fnGetPosition( this );
-            //oTable.fnUpdate( sValue, aPos[0], aPos[1] );
-        },
-        "submitdata": function ( value, settings ) {
-            console.log(this.parentNode.getAttribute('id'));
-            console.log(oTable.fnGetPosition( this )[2]);
-              var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working edit from jeditable"}}
-
-              return testdata;
-        },
         "height": "14px",
         "width": "100%"
-    } );
+
+      });
+
+
 
  });
 
@@ -66,16 +78,16 @@
  %table.table.table-striped.table-bordered.table-condensed#taskTable
   %thead
    %tr
-    %th Project name
-    %th Task name
-    %th Completed on
-    %th Hours
-    %th Notes
+    %th{:id=>"project_name"} Project name
+    %th{:id=>"task_name"} Task name
+    %th{:id=>"performed_on"} Completed on
+    %th{:id=>"hours"} Hours
+    %th{:id=>"notes"} Notes
     %th
   %tbody
    - @tasks.each do |task|
     %tr{:id=>task.id}
-     %td.editable= task.project_name
+     %td= task.project_name
      %td= task.task_name
      %td= task.performed_on
      %td= task.hours
