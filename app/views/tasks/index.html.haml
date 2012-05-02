@@ -28,8 +28,8 @@
        return(value);
 
     }, {
-        indicator : 'Saving...',
-        tooltip   : 'Click to edit...',
+         type    : 'textarea',
+         submit  : 'OK',
         "height": "14px",
         "width": "100%"
 
@@ -41,14 +41,26 @@
 
      var d = new Date();
 
+    //var lastRow = $('#taskTable').dataTable().fnGetData(0); //get data from row 0
+    var i =  $('#taskTable tbody tr:first')[0];
+    //var i =  $('#taskTable');
+    var lastRow = $('#taskTable').dataTable().fnGetData(i); //get data from row 0
+    if (lastRow == null) {
+        lastRow = new Array();
+        lastRow[0] = "";
+        lastRow[1] = "";
+        lastRow[3] = "";
+        lastRow[4] = "";
+    }
+
      $('#taskTable').dataTable().fnAddData( [
 
 
-     "project name", "task name", d, 8, "working from javascript", "", "", "", "", "" ]);
+     lastRow[0], lastRow[1], d, lastRow[3], lastRow[4], "", "", "", "", "" ]);
 
 
 
-      var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d.toISOString()}}
+      var testdata = {task : {"project_name" : lastRow[0], "task_name" : lastRow[1], "performed_on": d.toISOString(), "hours" : lastRow[3], "notes" : lastRow[4]}};
 
       $.ajax({
           type: 'POST',
