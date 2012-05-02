@@ -1,69 +1,60 @@
 :javascript
  $(document).ready( function() {
- var oTable = $('#taskTable').dataTable();
- $('#addNewButton').click(function() {
-  fnClickAddRow();
+    var oTable = $('#taskTable').dataTable();
+    $('#addNewButton').click(function() {
+    fnClickAddRow();
   })
 
 
  oTable.$('td').editable(function(value, settings) {
 
-    var aPos = oTable.fnGetPosition( this );
-    var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id');
-    console.log(name);
-
-    var className = this.getAttribute('class');
-    console.log(className);
+   var aPos = oTable.fnGetPosition(this); //gets xy position in table
+   var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id');
+   var id = this.parentNode.getAttribute('id');  //id the id of the row
 
    var data = {};
    data[name] = value;
 
-   var testdata = {task : data};
-   id = this.parentNode.getAttribute('id');
+   var taskdata = {task : data};
+
    $.ajax({
-   type: 'PUT',
-   url: 'tasks/' + id + '.json',
-   data : testdata,
+       type: 'PUT',
+       url: 'tasks/' + id + '.json',
+       data : taskdata,
    });
 
+       return(value);
 
-            return(value);
     }, {
-             indicator : 'Saving...',
-             tooltip   : 'Click to edit...',
+        indicator : 'Saving...',
+        tooltip   : 'Click to edit...',
         "height": "14px",
         "width": "100%"
 
       });
 
-
-
  });
 
  function fnClickAddRow() {
 
-    var d = new Date().toISOString();
+     var d = new Date().toISOString();
 
- $('#taskTable').dataTable().fnAddData( [
-
-
- "foobar", "", d, 8, "working from javascript", "admin", "foo@bar.com", "", "", "" ]);
+     $('#taskTable').dataTable().fnAddData( [
 
 
+     "foobar", "", d, 8, "working from javascript", "admin", "foo@bar.com", "", "", "" ]);
 
-  var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d}}
 
-  $.ajax({
-  type: 'POST',
-  url: 'tasks.json',
-  data : testdata,
-  });
 
-   //$('#taskTable').dataTable().fnReloadAjax();
+      var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d}}
+
+      $.ajax({
+          type: 'POST',
+          url: 'tasks.json',
+          data : testdata,
+      });
 
   }
-
-
 
 
 .page-header
