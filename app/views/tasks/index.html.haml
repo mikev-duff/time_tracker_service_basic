@@ -1,6 +1,8 @@
 :javascript
  $(document).ready( function() {
-    var oTable = $('#taskTable').dataTable();
+    var oTable = $('#taskTable').dataTable( {
+        "aaSorting": [[ 2, "desc" ]]
+    });
     $('#addNewButton').click(function() {
     fnClickAddRow();
   })
@@ -37,16 +39,16 @@
 
  function fnClickAddRow() {
 
-     var d = new Date().toISOString();
+     var d = new Date();
 
      $('#taskTable').dataTable().fnAddData( [
 
 
-     "foobar", "", d, 8, "working from javascript", "admin", "foo@bar.com", "", "", "" ]);
+     "project name", "task name", d, 8, "working from javascript", "", "", "", "", "" ]);
 
 
 
-      var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d}}
+      var testdata = {task : {"project_name" : "foobar", "hours" : 8, "notes" : "working from javascript", "performed_on": d.toISOString()}}
 
       $.ajax({
           type: 'POST',
