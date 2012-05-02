@@ -71,8 +71,6 @@
     %th Completed on
     %th Hours
     %th Notes
-    %th User
-    %th Email
     %th
   %tbody
    - @tasks.each do |task|
@@ -82,8 +80,6 @@
      %td= task.performed_on
      %td= task.hours
      %td= task.notes
-     %td= task.user.name
-     %td= task.user.email
      %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
 
 
