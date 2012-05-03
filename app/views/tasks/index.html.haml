@@ -53,10 +53,6 @@
         lastRow[4] = "";
     }
 
-     $('#taskTable').dataTable().fnAddData( [
-
-
-     lastRow[0], lastRow[1], d, lastRow[3], lastRow[4], "", "", "", "", "" ]);
 
 
 
@@ -67,6 +63,8 @@
           url: 'tasks.json',
           data : testdata,
       });
+
+      window.location.reload(true);  //heavy-handed, but otherwise it's a big pain in the arse to get new row editable
 
   }
 
