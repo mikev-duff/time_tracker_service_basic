@@ -1,7 +1,7 @@
 :javascript
  $(document).ready( function() {
     var oTable = $('#taskTable').dataTable( {
-        "aaSorting": [[ 2, "desc" ]]
+        "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
     $('#addNewButton').click(function() {
     fnClickAddRow();
@@ -11,8 +11,8 @@
  oTable.$('td').editable(function(value, settings) {
 
    var aPos = oTable.fnGetPosition(this); //gets xy position in table
-   var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id');
-   var id = this.parentNode.getAttribute('id');  //id the id of the row
+   var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id'); //column name is the id
+   var id = this.parentNode.getAttribute('id');  //row id (also in column 0)
 
    var data = {};
    data[name] = value;
@@ -48,8 +48,8 @@
     var lastRow = $('#taskTable').dataTable().fnGetData(i); //get data from row 0
     if (lastRow == null) {
         lastRow = new Array();
-        lastRow[0] = "";
         lastRow[1] = "";
+        lastRow[2] = "";
         lastRow[3] = "";
         lastRow[4] = "";
     }
@@ -57,7 +57,7 @@
 
 
 
-      var testdata = {task : {"project_name" : lastRow[0], "task_name" : lastRow[1], "performed_on": d.toISOString(), "hours" : lastRow[3], "notes" : lastRow[4]}};
+      var testdata = {task : {"project_name" : lastRow[1], "task_name" : lastRow[2], "performed_on": d.toISOString(), "hours" : lastRow[4], "notes" : lastRow[5]}};
 
       $.ajax({
           type: 'POST',
@@ -82,6 +82,7 @@
  %table.table.table-striped.table-bordered.table-condensed#taskTable
   %thead
    %tr
+    %th.hidden Task Id
     %th{:id=>"project_name"} Project name
     %th{:id=>"task_name"} Task name
     %th{:id=>"performed_on"} Completed on
@@ -91,6 +92,7 @@
   %tbody
    - @tasks.each do |task|
     %tr{:id=>task.id}
+     %td.hidden= task.id
      %td= task.project_name
      %td= task.task_name
      %td= task.performed_on
