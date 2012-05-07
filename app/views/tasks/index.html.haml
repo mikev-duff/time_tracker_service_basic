@@ -1,12 +1,32 @@
 :javascript
  $(document).ready( function() {
     var oTable = $('#taskTable').dataTable( {
-        "fnDrawCallback":function(){ $('.datepicker').datepicker()},
+        "aoColumnDefs": [ { "sClass": 'ui-datepicker-inline', "aTargets": [ 3 ] } ],
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
     $('#addNewButton').click(function() {
     fnClickAddRow();
   })
+
+ // select everything when editing field in focus
+ $('#taskTable tbody td input').live('focus', function (e){
+ $(this).select();
+  });
+
+ // attach datepicker on focus and format to return yy-mm-dd
+ $('#taskTable tbody td.ui-datepicker-inline input').live('focus', function (e){
+ $(this).datepicker({ dateFormat: 'yy-mm-dd' }).datepicker("show");
+ });
+
+ // override normal blur function ( needed for date month switching )
+ $('#taskTable tbody td input').live('blur', function (e){
+ return false;
+ });
+
+ // set change function to handle sumbit
+ $('#taskTable tbody td.ui-datepicker-inline input').live('change', function (e){
+ $(this).parents("form").submit();
+ });
 
 
  oTable.$('td').editable(function(value, settings) {
@@ -30,8 +50,6 @@
        return(value);
 
     }, {
-         type    : 'textarea',
-         submit  : 'OK',
         "height": "14px",
         "width": "100%"
 
@@ -100,7 +118,7 @@
      %td.hidden= task.id
      %td= task.project_name
      %td= task.task_name
-     %td.datepicker= task.performed_on
+     %td.ui-datepicker-inline= task.performed_on
      %td= task.hours
      %td= task.notes
      %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
