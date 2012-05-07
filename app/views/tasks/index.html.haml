@@ -40,7 +40,8 @@
  {
     var aData = oTable.fnGetData(nRow);
     var jqTds = $('>td', nRow);
-    jqTds[1].innerHTML = '<input class="span2" type="text" value="'+aData[1]+'">';
+    var options = '<select><option value="Nest">Nest</option><option selected="selected" value="Duff">Duff</option></select>';
+    jqTds[1].innerHTML = options;
     jqTds[2].innerHTML = '<input class="span2" type="text" value="'+aData[2]+'">';
     jqTds[3].innerHTML = '<input class="span2" type="text" id="datepicker" value="'+aData[3]+'">';
     jqTds[4].innerHTML = '<input class="span2" type="text" value="'+aData[4]+'">';
@@ -52,16 +53,18 @@
 
  function saveRow ( oTable, nRow )
  {
+    var projectName = $('select', nRow);
+    projectName = projectName[0].value;
     var jqInputs = $('input', nRow);
-    oTable.fnUpdate( jqInputs[0].value, nRow, 1, false );
-    oTable.fnUpdate( jqInputs[1].value, nRow, 2, false );
-    oTable.fnUpdate( jqInputs[2].value, nRow, 3, false );
-    oTable.fnUpdate( jqInputs[3].value, nRow, 4, false );
-    oTable.fnUpdate( jqInputs[4].value, nRow, 5, false );
+    oTable.fnUpdate( projectName, nRow, 1, false );
+    oTable.fnUpdate( jqInputs[0].value, nRow, 2, false );
+    oTable.fnUpdate( jqInputs[1].value, nRow, 3, false );
+    oTable.fnUpdate( jqInputs[2].value, nRow, 4, false );
+    oTable.fnUpdate( jqInputs[3].value, nRow, 5, false );
     oTable.fnUpdate( '<a class="edit" href="">Edit</a>', nRow, 6, false );
     oTable.fnDraw();
 
-    var taskdata = {task : {"project_name" : jqInputs[0].value, "task_name" : jqInputs[1].value, "performed_on": jqInputs[2].value, "hours" : jqInputs[3].value, "notes" : jqInputs[4].value}};
+    var taskdata = {task : {"project_name" : projectName, "task_name" : jqInputs[0].value, "performed_on": jqInputs[1].value, "hours" : jqInputs[2].value, "notes" : jqInputs[3].value}};
 
     var id = nRow.getAttribute('id');  //row id (also in column 0)
 
