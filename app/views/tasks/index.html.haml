@@ -28,6 +28,9 @@
  $(this).parents("form").submit();
  });
 
+ $('.project_name').change(function() {
+   alert('Handler for .change() called.');
+ });
 
  oTable.$('td').editable(function(value, settings) {
 
@@ -96,6 +99,7 @@
 
 
 .row.span12
+ <p>Date: <input type="text" id="datepicker"></p>
  %button.btn.btn-primary#addNewButton Add New Task
 
 .row.span12
@@ -114,7 +118,11 @@
    - @tasks.each do |task|
     %tr{:id=>task.id}
      %td.hidden= task.id
-     %td= task.project_name
+     %td.project_name
+      %select
+       <option value="Nest">Nest</option>
+       <option value="Duff">Duff</option>
+       <option value="Streetline">Streetline</option>
      %td= task.task_name
      %td.ui-datepicker-inline= task.performed_on
      %td= task.hours
