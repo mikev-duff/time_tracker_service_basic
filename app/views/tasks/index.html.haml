@@ -1,71 +1,96 @@
 :javascript
+ var oTable;
+ var nEditing = null;
  $(document).ready( function() {
-    var oTable = $('#taskTable').dataTable( {
-        "aoColumnDefs": [ { "sClass": 'ui-datepicker-inline', "aTargets": [ 3 ] } ],
+    oTable = $('#taskTable').dataTable( {
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
+
     $('#addNewButton').click(function() {
-    fnClickAddRow();
-  })
+     fnClickAddRow();
+    });
 
- // select everything when editing field in focus
- $('#taskTable tbody td input').live('focus', function (e){
- $(this).select();
-  });
+ $('#taskTable a.edit').live('click', function (e) {
+        e.preventDefault();
 
- // attach datepicker on focus and format to return yy-mm-dd
- $('#taskTable tbody td.ui-datepicker-inline input').live('focus', function (e){
- $(this).datepicker({ dateFormat: 'yy-mm-dd' }).datepicker("show");
+        /* Get the row as a parent of the link that was clicked on */
+        var nRow = $(this).parents('tr')[0];
+
+        if ( nEditing !== null && nEditing != nRow ) {
+            /* A different row is being edited - the edit should be cancelled and this row edited */
+            restoreRow( oTable, nEditing );
+            editRow( oTable, nRow );
+            nEditing = nRow;
+        }
+        else if ( nEditing == nRow && this.innerHTML == "Save" ) {
+            /* This row is being edited and should be saved */
+            saveRow( oTable, nEditing );
+            nEditing = null;
+        }
+        else {
+            /* No row currently being edited */
+            editRow( oTable, nRow );
+            nEditing = nRow;
+        }
+    } );
+
  });
 
- // override normal blur function ( needed for date month switching )
- $('#taskTable tbody td input').live('blur', function (e){
- return false;
- });
 
- // set change function to handle sumbit
- $('#taskTable tbody td.ui-datepicker-inline input').live('change', function (e){
- $(this).parents("form").submit();
- });
+ function editRow ( oTable, nRow )
+ {
+    var aData = oTable.fnGetData(nRow);
+    var jqTds = $('>td', nRow);
+    jqTds[1].innerHTML = '<input type="text" value="'+aData[1]+'">';
+    jqTds[2].innerHTML = '<input type="text" value="'+aData[2]+'">';
+    jqTds[3].innerHTML = '<input type="text" value="'+aData[3]+'">';
+    jqTds[4].innerHTML = '<input type="text" value="'+aData[4]+'">';
+    jqTds[5].innerHTML = '<input type="text" value="'+aData[5]+'">';
+    jqTds[6].innerHTML = '<a class="edit" href="">Save</a>';
+ }
 
- $('.project_name').change(function() {
-   alert('Handler for .change() called.');
- });
+ function saveRow ( oTable, nRow )
+ {
+    var jqInputs = $('input', nRow);
+    oTable.fnUpdate( jqInputs[0].value, nRow, 1, false );
+    oTable.fnUpdate( jqInputs[1].value, nRow, 2, false );
+    oTable.fnUpdate( jqInputs[2].value, nRow, 3, false );
+    oTable.fnUpdate( jqInputs[3].value, nRow, 4, false );
+    oTable.fnUpdate( jqInputs[4].value, nRow, 5, false );
+    oTable.fnUpdate( '<a class="edit" href="">Edit</a>', nRow, 6, false );
+    oTable.fnDraw();
 
- oTable.$('td').editable(function(value, settings) {
+    var taskdata = {task : {"project_name" : jqInputs[0].value, "task_name" : jqInputs[1].value, "performed_on": jqInputs[2].value, "hours" : jqInputs[3].value, "notes" : jqInputs[4].value}};
 
-   var aPos = oTable.fnGetPosition(this); //gets xy position in table
-   var name = $('#taskTable thead tr th:eq(' + aPos[1] + ')').attr('id'); //column name is the id
-   var id = this.parentNode.getAttribute('id');  //row id (also in column 0)
+    var id = nRow.getAttribute('id');  //row id (also in column 0)
 
-   var data = {};
-   data[name] = value;
-
-   var taskdata = {task : data};
-
-   $.ajax({
+    $.ajax({
        type: 'PUT',
        url: 'tasks/' + id + '.json',
        data : taskdata,
-   });
+     });
 
-       return(value);
+ }
 
-    }, {
-        "height": "14px",
-        "width": "100%"
+ function restoreRow ( oTable, nRow )
+ {
+    var aData = oTable.fnGetData(nRow);
+    var jqTds = $('>td', nRow);
+    jqTds[1].innerHTML = aData[1];
+    jqTds[2].innerHTML = aData[2];
+    jqTds[3].innerHTML = aData[3];
+    jqTds[4].innerHTML = aData[4];
+    jqTds[5].innerHTML = aData[5];
+    jqTds[6].innerHTML = '<a class="edit" href="">Edit</a>';
+ }
 
-      });
 
- });
 
  function fnClickAddRow() {
 
      var d = new Date();
 
-    //var lastRow = $('#taskTable').dataTable().fnGetData(0); //get data from row 0
     var i =  $('#taskTable tbody tr:first')[0];
-    //var i =  $('#taskTable');
     var lastRow = $('#taskTable').dataTable().fnGetData(i); //get data from row 0
     if (lastRow == null) {
         lastRow = new Array();
@@ -74,8 +99,6 @@
         lastRow[3] = "";
         lastRow[4] = "";
     }
-
-
 
 
       var testdata = {task : {"project_name" : lastRow[1], "task_name" : lastRow[2], "performed_on": d.toISOString(), "hours" : lastRow[4], "notes" : lastRow[5]}};
@@ -89,10 +112,6 @@
       window.location.reload(true);  //heavy-handed, but otherwise it's a big pain in the arse to get new row editable
 
   }
-
- $(function() {
-  $( "#datepicker" ).datepicker();
- });
 
 .page-header
  %h1 #{@user.name}'s Completed Tasks
@@ -113,20 +132,18 @@
     %th{:id=>"performed_on"} Completed on
     %th{:id=>"hours"} Hours
     %th{:id=>"notes"} Notes
-    %th
+    %th{:id=>"edit"} Edit
+    %th{:id=>"delete"} Delete
   %tbody
    - @tasks.each do |task|
     %tr{:id=>task.id}
      %td.hidden= task.id
-     %td.project_name
-      %select
-       <option value="Nest">Nest</option>
-       <option value="Duff">Duff</option>
-       <option value="Streetline">Streetline</option>
+     %td= task.project_name
      %td= task.task_name
-     %td.ui-datepicker-inline= task.performed_on
+     %td= task.performed_on
      %td= task.hours
      %td= task.notes
+     %td.edit <a class="edit" href="">Edit</a>
      %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
 
 
