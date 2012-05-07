@@ -36,17 +36,18 @@
 
  });
 
-
  function editRow ( oTable, nRow )
  {
     var aData = oTable.fnGetData(nRow);
     var jqTds = $('>td', nRow);
-    jqTds[1].innerHTML = '<input type="text" value="'+aData[1]+'">';
-    jqTds[2].innerHTML = '<input type="text" value="'+aData[2]+'">';
-    jqTds[3].innerHTML = '<input type="text" value="'+aData[3]+'">';
-    jqTds[4].innerHTML = '<input type="text" value="'+aData[4]+'">';
-    jqTds[5].innerHTML = '<input type="text" value="'+aData[5]+'">';
+    jqTds[1].innerHTML = '<input class="span2" type="text" value="'+aData[1]+'">';
+    jqTds[2].innerHTML = '<input class="span2" type="text" value="'+aData[2]+'">';
+    jqTds[3].innerHTML = '<input class="span2" type="text" id="datepicker" value="'+aData[3]+'">';
+    jqTds[4].innerHTML = '<input class="span2" type="text" value="'+aData[4]+'">';
+    jqTds[5].innerHTML = '<input class="span2" type="text" value="'+aData[5]+'">';
     jqTds[6].innerHTML = '<a class="edit" href="">Save</a>';
+
+    $("#datepicker").datepicker({dateFormat: 'yy-mm-dd'});
  }
 
  function saveRow ( oTable, nRow )
@@ -117,32 +118,31 @@
  %h1 #{@user.name}'s Completed Tasks
 
 
-.row.span12
- <p>Date: <input type="text" id="datepicker"></p>
+.row
  %button.btn.btn-primary#addNewButton Add New Task
 
-.row.span12
+.row
 
  %table.table.table-striped.table-bordered.table-condensed#taskTable
   %thead
    %tr
     %th.hidden Task Id
-    %th{:id=>"project_name"} Project name
-    %th{:id=>"task_name"} Task name
-    %th{:id=>"performed_on"} Completed on
-    %th{:id=>"hours"} Hours
-    %th{:id=>"notes"} Notes
+    %th.span2{:id=>"project_name"} Project name
+    %th.span2{:id=>"task_name"} Task name
+    %th.span2{:id=>"performed_on"} Completed on
+    %th.span2{:id=>"hours"} Hours
+    %th.span2{:id=>"notes"} Notes
     %th{:id=>"edit"} Edit
     %th{:id=>"delete"} Delete
   %tbody
    - @tasks.each do |task|
     %tr{:id=>task.id}
      %td.hidden= task.id
-     %td= task.project_name
-     %td= task.task_name
-     %td= task.performed_on
-     %td= task.hours
-     %td= task.notes
+     %td.span2= task.project_name
+     %td.span2= task.task_name
+     %td.span2= task.performed_on
+     %td.span2= task.hours
+     %td.span2= task.notes
      %td.edit <a class="edit" href="">Edit</a>
      %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
 

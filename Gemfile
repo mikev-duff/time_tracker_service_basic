@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'thin'
 gem 'haml'
 gem 'bcrypt-ruby'
 gem 'bootstrap-sass'
