@@ -1,6 +1,7 @@
 :javascript
  $(document).ready( function() {
     var oTable = $('#taskTable').dataTable( {
+        "fnDrawCallback":function(){ $('.datepicker').datepicker()},
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
     $('#addNewButton').click(function() {
@@ -69,6 +70,9 @@
 
   }
 
+ $(function() {
+  $( "#datepicker" ).datepicker();
+ });
 
 .page-header
  %h1 #{@user.name}'s Completed Tasks
@@ -76,6 +80,7 @@
 
 .row.span12
  %button.btn.btn-primary#addNewButton Add New Task
+ <p>Date: <input type="text" id="datepicker"></p>
 
 .row.span12
 
@@ -95,7 +100,7 @@
      %td.hidden= task.id
      %td= task.project_name
      %td= task.task_name
-     %td= task.performed_on
+     %td.datepicker= task.performed_on
      %td= task.hours
      %td= task.notes
      %td= link_to 'Delete', task, confirm: 'Are you sure?', method: :delete
