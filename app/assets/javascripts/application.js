@@ -15,4 +15,6 @@
 //= require jquery.ui.all
 //= require jquery_ujs
 //= require jquery.jeditable
-//= require_tree .
+//= require jquery.dataTables
+//= require TableTools
+//= require ZeroClipboard

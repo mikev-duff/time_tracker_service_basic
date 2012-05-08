@@ -37,6 +37,7 @@
  );
 
     oTable = $('#taskTable').dataTable( {
+    	"sDom": 'T<"clear">lfrtip',
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
 
@@ -86,7 +87,7 @@
 
    %section#tasks
     .page-header
-     %h2 Related Tasks
+     %h2 Recorded Tasks
 
     %p
      %table.table.table-striped.table-bordered.table-condensed#taskTable
@@ -109,19 +110,16 @@
          %td.span2= task.hours
 
 
-   %section#subtotals
+   %section#Totals
     .page-header
-     %h3 Subtotals
-     %table.table.table-striped.table-bordered.table-condensed
-      %thead
-       %tr
-        %th.span2 Employee
-        %th.span2 Hours
-      %tbody
-       - @subtotals.each do |name, hours|
-        %tr
-         %td.span2= name
-         %td.span2= hours
+     / %h3 Total Hours
+    %table.table.table-striped.table-bordered.table-condensed
+     %thead
+      %tr
+       %th Total Hours
+     %tbody
+      %tr
+       %td 16
 
  .page-footer
   = link_to 'Back', projects_path
