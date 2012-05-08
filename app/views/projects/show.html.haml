@@ -2,16 +2,63 @@
  var oTable;
  var nEditing = null;
  $(document).ready( function() {
+
+ $.fn.dataTableExt.afnFiltering.push(
+     function( oSettings, aData, iDataIndex ) {
+         var iFini = document.getElementById('datepicker-start').value;
+         var iFfin = document.getElementById('datepicker-end').value;
+         var iStartDateCol = 3;
+         var iEndDateCol = 3;
+
+         iFini=iFini.substring(6,10) + iFini.substring(3,5)+ iFini.substring(0,2)
+         iFfin=iFfin.substring(6,10) + iFfin.substring(3,5)+ iFfin.substring(0,2)
+
+         var datofini=aData[iStartDateCol].substring(6,10) + aData[iStartDateCol].substring(3,5)+ aData[iStartDateCol].substring(0,2);
+         var datoffin=aData[iEndDateCol].substring(6,10) + aData[iEndDateCol].substring(3,5)+ aData[iEndDateCol].substring(0,2);
+
+         if ( iFini == "" && iFfin == "" )
+         {
+             return true;
+         }
+         else if ( iFini <= datofini && iFfin == "")
+         {
+             return true;
+         }
+         else if ( iFfin >= datoffin && iFini == "")
+         {
+             return true;
+         }
+         else if (iFini <= datofini && iFfin >= datoffin)
+         {
+             return true;
+         }
+         return false;
+     }
+ );
+
     oTable = $('#taskTable').dataTable( {
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
 
-    $("#datepicker-start").datepicker({dateFormat: 'yy-mm-dd'});
-    $("#datepicker-end").datepicker({dateFormat: 'yy-mm-dd'});
+    $( "#datepicker-start" ).datepicker ( {
+      dateFormat: 'yy-mm-dd',
+      "onSelect": function(date) {
 
-    $('#datepicker-start').click(function() {
-     fnClickAddRow();
-    });
+      oTable.fnDraw();
+      }
+       } ).keyup( function () {
+      oTable.fnDraw();
+     } );
+
+    $( "#datepicker-end" ).datepicker ( {
+      dateFormat: 'yy-mm-dd',
+      "onSelect": function(date) {
+
+      oTable.fnDraw();
+      }
+       } ).keyup( function () {
+      oTable.fnDraw();
+     } );
 
  });
 
@@ -64,7 +111,7 @@
 
    %section#subtotals
     .page-header
-     %h2 Subtotals
+     %h3 Subtotals
      %table.table.table-striped.table-bordered.table-condensed
       %thead
        %tr

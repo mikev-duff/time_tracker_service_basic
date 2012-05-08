@@ -14,6 +14,5 @@
 //= require jquery-ui
 //= require jquery.ui.all
 //= require jquery_ujs
-//= require jquery.dataTables
 //= require jquery.jeditable
 //= require_tree .
