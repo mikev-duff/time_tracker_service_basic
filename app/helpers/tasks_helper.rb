@@ -1,8 +1,9 @@
 module TasksHelper
 
 def projectSelect()
+ names = Array.new
+ Project.all.each { |p|  names.push p.name}
  out = "<select class=\"span2\">"
- names = ["Nest", "Vacation", "Sick Time"]
  names.each do |name|
    out += "<option value=\"#{name}\">#{name}</option>"
  end
