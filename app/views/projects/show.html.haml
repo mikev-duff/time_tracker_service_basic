@@ -1,33 +1,62 @@
+:javascript
+ var oTable;
+ var nEditing = null;
+ $(document).ready( function() {
+    oTable = $('#taskTable').dataTable( {
+        "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
+    });
+
+    $('#datepicker-start').click(function() {
+     fnClickAddRow();
+    });
+
+ });
+
 .notice #{notice}
 
-%header.jumbotron.subhead
- %h1
-  #{@project.name}
-  %small #{@project.notes}
+.container-fluid
+ .row-fluid
+  .span2
+   %p
+    %h3
+     Date Filters
+     %p
+      %h4
+       %p start
+       %input.span8#datepicker-start
+       %p end
+       %input.span8#datepicker-end
 
-%h2 Related Tasks
+  .span10
 
-%p
- %table.table.table-striped.table-bordered.table-condensed#taskTable
-  %thead
-   %tr
-    %th.hidden Task Id
-    %th.span2{:id=>"project_name"} Employee
-    %th.span2{:id=>"task_name"} Task name
-    %th.span2{:id=>"performed_on"} Completed on
-    %th.span2{:id=>"notes"} Notes
-    %th.span2{:id=>"hours"} Hours
-  %tbody
-   - @tasks.each do |task|
-    %tr{:id=>task.id}
-     %td.hidden= task.id
-     %td.span2= task.user.name
-     %td.span2= task.task_name
-     %td.span2= task.performed_on
-     %td.span2= task.notes
-     %td.span2= task.hours
+   %header.jumbotron.subhead
+    %h1
+     #{@project.name}
+     %small #{@project.notes}
 
-.page-footer
- = link_to 'Edit', edit_project_path(@project)
- |
- = link_to 'Back', projects_path
+   %h2 Related Tasks
+
+   %p
+    %table.table.table-striped.table-bordered.table-condensed#taskTable
+     %thead
+      %tr
+       %th.hidden Task Id
+       %th.span2{:id=>"project_name"} Employee
+       %th.span2{:id=>"task_name"} Task name
+       %th.span2{:id=>"performed_on"} Completed on
+       %th.span2{:id=>"notes"} Notes
+       %th.span2{:id=>"hours"} Hours
+     %tbody
+      - @tasks.each do |task|
+       %tr{:id=>task.id}
+        %td.hidden= task.id
+        %td.span2= task.user.name
+        %td.span2= task.task_name
+        %td.span2= task.performed_on
+        %td.span2= task.notes
+        %td.span2= task.hours
+
+   .page-footer
+    = link_to 'Edit', edit_project_path(@project)
+    |
+    = link_to 'Back', projects_path
