@@ -39,9 +39,21 @@
  function editRow ( oTable, nRow )
  {
     var aData = oTable.fnGetData(nRow);
+    var selected = aData[1];
     var jqTds = $('>td', nRow);
-    var options = '<select><option value="Nest">Nest</option><option selected="selected" value="Duff">Duff</option></select>';
+
+    var options = '#{projectSelect()}';
     jqTds[1].innerHTML = options;
+
+    var l = jqTds[1].childNodes[0].children.length;
+    for (i=0; i<l; i++) {
+      var t = jqTds[1].childNodes[0].children[i].innerHTML;
+      if (selected == t) {
+        jqTds[1].firstChild.selectedIndex = i;
+        break;
+      }
+    }
+
     jqTds[2].innerHTML = '<input class="span2" type="text" value="'+aData[2]+'">';
     jqTds[3].innerHTML = '<input class="span2" type="text" id="datepicker" value="'+aData[3]+'">';
     jqTds[4].innerHTML = '<input class="span2" type="text" value="'+aData[4]+'">';
