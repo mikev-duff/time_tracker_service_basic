@@ -47,9 +47,8 @@ before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
   # POST /tasks.json
   def create
      @task = @user.tasks.build(params[:task])
-#    @task = Task.new(params[:task])
-#    @user = User.find(params[:task][:user])
-#    @task = @user.tasks.create(params[:task])
+     project = Project.find_by_name(params[:task][:project_name])
+     @task.project = project
 
     respond_to do |format|
       if @task.save
@@ -65,6 +64,8 @@ before_filter :fetch_task_for_user, :only => [:show, :edit, :update, :destroy]
   # PUT /tasks/1
   # PUT /tasks/1.json
   def update
+     project = Project.find_by_name(params[:task][:project_name])
+     @task.project = project
 
     respond_to do |format|
       if @task.update_attributes(params[:task])
