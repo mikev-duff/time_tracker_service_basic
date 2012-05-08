@@ -15,6 +15,7 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
     @tasks = @project.tasks
+    @subtotals = {"Your Name" => 10}
 
     respond_to do |format|
       format.html # show.html.erb

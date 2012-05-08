@@ -6,6 +6,9 @@
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
 
+    $("#datepicker-start").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#datepicker-end").datepicker({dateFormat: 'yy-mm-dd'});
+
     $('#datepicker-start').click(function() {
      fnClickAddRow();
     });
@@ -34,27 +37,44 @@
      #{@project.name}
      %small #{@project.notes}
 
-   %h2 Related Tasks
+   %section#tasks
+    .page-header
+     %h2 Related Tasks
 
-   %p
-    %table.table.table-striped.table-bordered.table-condensed#taskTable
-     %thead
-      %tr
-       %th.hidden Task Id
-       %th.span2{:id=>"project_name"} Employee
-       %th.span2{:id=>"task_name"} Task name
-       %th.span2{:id=>"performed_on"} Completed on
-       %th.span2{:id=>"notes"} Notes
-       %th.span2{:id=>"hours"} Hours
-     %tbody
-      - @tasks.each do |task|
-       %tr{:id=>task.id}
-        %td.hidden= task.id
-        %td.span2= task.user.name
-        %td.span2= task.task_name
-        %td.span2= task.performed_on
-        %td.span2= task.notes
-        %td.span2= task.hours
+    %p
+     %table.table.table-striped.table-bordered.table-condensed#taskTable
+      %thead
+       %tr
+        %th.hidden Task Id
+        %th.span2{:id=>"project_name"} Employee
+        %th.span2{:id=>"task_name"} Task name
+        %th.span2{:id=>"performed_on"} Completed on
+        %th.span2{:id=>"notes"} Notes
+        %th.span2{:id=>"hours"} Hours
+      %tbody
+       - @tasks.each do |task|
+        %tr{:id=>task.id}
+         %td.hidden= task.id
+         %td.span2= task.user.name
+         %td.span2= task.task_name
+         %td.span2= task.performed_on
+         %td.span2= task.notes
+         %td.span2= task.hours
+
+
+   %section#subtotals
+    .page-header
+     %h2 Subtotals
+     %table.table.table-striped.table-bordered.table-condensed
+      %thead
+       %tr
+        %th.span2 Employee
+        %th.span2 Hours
+      %tbody
+       - @subtotals.each do |name, hours|
+        %tr
+         %td.span2= name
+         %td.span2= hours
 
  .page-footer
   = link_to 'Back', projects_path
