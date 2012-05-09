@@ -37,7 +37,7 @@
  );
 
     oTable = $('#taskTable').dataTable( {
-    	"sDom": '<"clear">lfrtTip',
+    	"sDom": '<"clear">lfTrtip',
         "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
     });
 
@@ -68,7 +68,7 @@
 .container-fluid
  .row-fluid
   .span2
-   %p
+   .page-header.jumbotron.subhead
     %h3
      Date Filters
      %p
@@ -80,7 +80,7 @@
 
   .span10
 
-   %header.jumbotron.subhead
+   .page-header.jumbotron.subhead
     %h1
      #{@project.name}
      %small #{@project.notes}
