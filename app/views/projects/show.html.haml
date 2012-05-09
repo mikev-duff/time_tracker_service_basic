@@ -37,8 +37,34 @@
  );
 
     oTable = $('#taskTable').dataTable( {
-    	"sDom": '<"clear">lfTrtip',
-        "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]]
+        "bPaginate": false,
+        "sDom": '<"clear">fTrti',
+        "aaSorting": [[ 3, "desc" ], [ 0, "desc" ]],
+
+        "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+            /*
+             * Calculate the total hours in this table (ie inc. outside
+             * the pagination)
+             */
+            var iTotalHours = 0;
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalHours += aaData[i][4]*1;
+            }
+
+            /* Calculate the total hours on this page */
+            var iPageHours = 0;
+            for ( var i=iStart ; i<iEnd ; i++ )
+            {
+                iPageHours += aaData[ aiDisplay[i] ][4]*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('th');
+            nCells[3].innerHTML = 'Total Hours:'
+            nCells[4].innerHTML = iPageHours;
+        }
+
     });
 
     $( "#datepicker-start" ).datepicker ( {
@@ -106,18 +132,14 @@
          %td.span2= task.performed_on
          %td.span2= task.notes
          %td.span2= task.hours
+      %tfoot
+       %tr
+        %th.span2
+        %th.span2
+        %th.span2
+        %th.span2
+        %th.span2
 
-
-   %section#Totals
-    .page-header
-     / %h3 Total Hours
-    %table.table.table-striped.table-bordered.table-condensed
-     %thead
-      %tr
-       %th Total Hours
-     %tbody
-      %tr
-       %td 16
 
  .page-footer
   = link_to 'Back', projects_path

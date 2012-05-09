@@ -45,6 +45,7 @@
     var options = '#{projectSelect()}';
     jqTds[1].innerHTML = options;
 
+    //set the 'selectedIndex' of the dropdown so correct one is selected
     var l = jqTds[1].childNodes[0].children.length;
     for (i=0; i<l; i++) {
       var t = jqTds[1].childNodes[0].children[i].innerHTML;
